@@ -66,4 +66,4 @@ if ($classe == "usuario") {
     }
 }
 
-//require_once "teste/Teste.php";
+//require_once "teste/Teste.php" teste;
