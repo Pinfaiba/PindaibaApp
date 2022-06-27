@@ -1,4 +1,5 @@
 <?php
+require_once "controladores/controlladorPrincipal.php";
 require_once "DAO/UsuarioDAO.php";
 require_once "DAO/TransacaoDAO.php";
 
@@ -22,6 +23,7 @@ if (count($path) == 0 || $path[0] == "") {
 }
 
 $parametros = $path;
+
 $classe = $path[0];
 
 unset($parametros[0]);
@@ -31,39 +33,7 @@ header('Content-type: application/json');
 $body = file_get_contents('php://input');
 $dados = json_decode($body, true);
 
-if ($classe == "usuario") {
-    switch ($parametros[1]) {
-        case "cadastrar":
-            $usuario = cadastrar($dados["nome"], $dados["email"], $dados["senha"]);
-            echo json_encode($usuario);
-            exit();
-        case "logar":
-            $usuario = logar($dados["email"], $dados["senha"]);
-            echo json_encode($usuario);
-            exit();
-        default:
-            echo '{"erro":"Erro n° 003, entre em contato com os desenvolvedores!"}';
-            exit();
-    }
-} elseif ($classe == "transacao") {
-    switch ($parametros[1]) {
-        case "realizar":
-            if (isset($dados["descricao"])) {
-                $realizada = realizarTransacao($dados["id"], $dados["alvo"], $dados["valor"], $dados["descricao"]);
-            } else {
-                $realizada = realizarTransacao($dados["id"], $dados["alvo"], $dados["valor"]);
-            }
 
-            if ($realizada) {
-                echo '{"status":"sucesso"}';
-            } else {
-                echo '{"status":"erro"}';
-            }
-            exit();
-        default:
-            echo '{"erro":"Erro n° 004, entre em contato com os desenvolvedores!"}';
-            exit();
-    }
-}
+echo redirecionaFuncao($classe, $parametros[1], $dados);
 
 //require_once "teste/Teste.php";
