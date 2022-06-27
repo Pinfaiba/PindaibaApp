@@ -15,7 +15,8 @@
  * Json que será enviada para aplicação
  * </p>
  */
-function redirecionaFuncao($classe, $acao, $dados){
+function redirecionaFuncao($classe, $acao, $dados)
+{
     if ($classe == "usuario") {
         switch ($acao) {
             case "cadastrar":
@@ -41,8 +42,63 @@ function redirecionaFuncao($classe, $acao, $dados){
                 } else {
                     return '{"status":"erro"}';
                 }
+
+            case "confirma":
+                if (isset($dados["transacao"]))
+                    $erro = confirmarTransacao($dados["transacao"]);
+                else
+                    $erro = confirmarTransacaoNotificacao($dados["transacao"]);
+
+                if ($erro)
+                    return '{"status":"erro"}';
+                else
+                    return '{"status" : "sucesso"}';
+            case "pegar":
+                if (isset($dados["alvo"]))
+                    $transacoes = getTransacoesAlvo($dados["logado"], $dados["alvo"]);
+                else
+                    $transacoes = getUltimasTransacoes($dados["logado"], $dados["quant"]);
+
+                if (is_array($transacoes))
+                    return json_encode($transacoes);
+                else
+                    return '{"status":"erro"}';
             default:
                 return '{"erro":"Erro n° 004, entre em contato com os desenvolvedores!"}';
         }
+    } elseif ($classe == "notificacao") {
+        switch ($acao) {
+            case "visualizar":
+                $visualizado = visualizarNotificacao($dados["notificacao"]);
+
+                if (!isset($visualizado))
+                    return '{"status" : "sucesso"}';
+                else
+                    return '{"status":"erro"}';
+            case "pegarTodas":
+                $notificacoes = getJsonNotificacoes($dados["logado"]);
+
+                return $notificacoes;
+            case "pegarNaoVisualizadas":
+                $notificacoes = getJsonNaoVisualizadas($dados["logado"]);
+
+                return  $notificacoes;
+            default:
+                return '{"erro":"Erro n° 004, entre em contato com os desenvolvedores!"}';
+        }
+    } elseif ($classe == "contato"){
+        switch ($acao) {
+            case "pegar":
+                $contatos = getAllContatos($dados["logado"]);
+
+                if (is_array($contatos))
+                    return json_encode($contatos);
+                else
+                    return '{"status":"erro"}';
+            default:
+                return '{"erro":"Erro n° 004, entre em contato com os desenvolvedores!"}';
+        }
+    } else {
+        return '{"erro":"Erro n° 004, entre em contato com os desenvolvedores!"}';
     }
 }

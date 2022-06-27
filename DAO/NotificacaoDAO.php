@@ -81,7 +81,7 @@ function getJsonNotificacoes($idUsuario){
 function getJsonNaoVisualizadas($idUsuario){
     $conex = conex();
     if ($conex -> connect_errno) {
-        return "{\"erro\" : \"Failed to connect to MySQL: $conex->connect_error\"}";
+        return "{\"status\" : \"erro\"}";
     }
 
     $sql = "call get_notificacoes_nao_visualizadas(?)";
@@ -96,7 +96,7 @@ function getJsonNaoVisualizadas($idUsuario){
 
     $result = $stat->get_result();
 
-    $retorno = "{\"erro\" : \"nenhuma notificação encontrada\"}";
+    $retorno = "{\"status\" : \"nenhuma notificação encontrada\"}";
 
     $notificacoes = $result->fetch_all(MYSQLI_ASSOC);
 
@@ -104,7 +104,7 @@ function getJsonNaoVisualizadas($idUsuario){
         $retorno = json_encode($notificacoes);
 
     if (isset($stat->error_list[0]))
-        $retorno = "{\"erro\" : \"$stat->error\"}";
+        $retorno = "{\"status\" : \"erro\"}";
 
     $stat->close();
     $conex->close();
