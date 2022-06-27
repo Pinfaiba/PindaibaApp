@@ -36,4 +36,5 @@ $dados = json_decode($body, true);
 
 echo redirecionaFuncao($classe, $parametros[1], $dados);
 
-//require_once "teste/Teste.php";
+//Área de teste
+//require_once "teste/Teste.php" teste;
