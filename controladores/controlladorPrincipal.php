@@ -23,7 +23,7 @@ function redirecionaFuncao($classe, $acao, $dados)
                 $usuario = cadastrar($dados["nome"], $dados["email"], $dados["senha"]);
                 return json_encode($usuario);
             case "logar":
-                $usuario = logar($dados["email"], $dados["senha"]);
+                $usuario = logar($dados["email"], sha1($dados["senha"]) );
                 return json_encode($usuario);
             default:
                 return '{"erro":"Erro n° 003, entre em contato com os desenvolvedores!"}';

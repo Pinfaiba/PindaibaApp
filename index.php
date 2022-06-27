@@ -36,4 +36,3 @@ $dados = json_decode($body, true);
 
 echo redirecionaFuncao($classe, $parametros[1], $dados);
 
-//outro teste
