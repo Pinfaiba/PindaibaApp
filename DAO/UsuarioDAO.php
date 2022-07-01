@@ -17,7 +17,7 @@ require_once "util/Funcoes.php";
 function logar($emailLogar, $senhaLogar){
     $conex = conex();
     if ($conex -> connect_errno) {
-        return "Failed to connect to MySQL: $conex->connect_error";
+        return Messages::ERROR_MESSAGE_005;
     }
 
     $sql =
@@ -40,7 +40,7 @@ function logar($emailLogar, $senhaLogar){
     $retorno = new Usuario($id, $nome, $email, $senha, $urlImg);
 
     if (isset($stat->error_list[0]))
-        $retorno = "$stat->error";
+        $retorno = Messages::ERROR_MESSAGE_006;
 
     if ($senha != $senhaLogar)
         $retorno = "senha incorreta";
@@ -73,7 +73,7 @@ function logar($emailLogar, $senhaLogar){
 function cadastrar($nomeCadastro, $emailCadastro, $senhaCadastro){
     $conex = conex();
     if ($conex -> connect_errno) {
-        return "Failed to connect to MySQL: " . $conex -> connect_error;
+        return Messages::ERROR_MESSAGE_005;
     }
 
     $sql = "SELECT cadastrar(?, ?, ?) as u";
@@ -101,8 +101,11 @@ function cadastrar($nomeCadastro, $emailCadastro, $senhaCadastro){
     if (isset($stat->error_list[0])){
         $stat->close();
         $conex->close();
-        return "$stat->error";
+        return Messages::ERROR_MESSAGE_006;
     }
+
+    $stat->close();
+    $conex->close();
 
     return logar($emailCadastro, $senhaCadastro);
 }

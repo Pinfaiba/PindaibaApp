@@ -21,12 +21,20 @@ function redirecionaFuncao($classe, $acao, $dados)
         switch ($acao) {
             case "cadastrar":
                 $usuario = cadastrar($dados["nome"], $dados["email"], $dados["senha"]);
+
+                if (is_string($usuario))
+                    return '{"status" : "' . $usuario . '"}';
+
                 return json_encode($usuario);
             case "logar":
                 $usuario = logar($dados["email"], sha1($dados["senha"]) );
+
+                if (is_string($usuario))
+                    return '{"status" : "' . $usuario . '"}';
+
                 return json_encode($usuario);
             default:
-                return '{"erro":"Erro n° 003, entre em contato com os desenvolvedores!"}';
+                return '{"erro":' . Messages::ERROR_MESSAGE_003 . '}';
         }
     } elseif ($classe == "transacao") {
         switch ($acao) {
@@ -37,11 +45,13 @@ function redirecionaFuncao($classe, $acao, $dados)
                     $realizada = realizarTransacao($dados["id"], $dados["alvo"], $dados["valor"]);
                 }
 
-                if ($realizada) {
-                    return '{"status":"sucesso"}';
-                } else {
+                if (is_string($realizada))
+                    return '{"status" : "' . $realizada . '"}';
+
+                if ($realizada)
+                    return '{"status":"não foi possivel realizar essa operação"}';
+                else
                     return '{"status":"erro"}';
-                }
 
             case "confirma":
                 if (isset($dados["transacao"]))
@@ -50,9 +60,9 @@ function redirecionaFuncao($classe, $acao, $dados)
                     $erro = confirmarTransacaoNotificacao($dados["transacao"]);
 
                 if ($erro)
-                    return '{"status":"erro"}';
+                    return '{"status":"não foi possivel realizar a tranzação, entre em cotato com os desenvolvedores"}';
                 else
-                    return '{"status" : "sucesso"}';
+                    return '{"status" : "transação realizada com sucesso"}';
             case "pegar":
                 if (isset($dados["alvo"]))
                     $transacoes = getTransacoesAlvo($dados["logado"], $dados["alvo"]);
@@ -62,9 +72,9 @@ function redirecionaFuncao($classe, $acao, $dados)
                 if (is_array($transacoes))
                     return json_encode($transacoes);
                 else
-                    return '{"status":"erro"}';
+                    return '{"status" : "' . $transacoes . '"}';
             default:
-                return '{"erro":"Erro n° 004, entre em contato com os desenvolvedores!"}';
+                return '{"erro":' . Messages::ERROR_MESSAGE_003 . '}';
         }
     } elseif ($classe == "notificacao") {
         switch ($acao) {
@@ -74,7 +84,8 @@ function redirecionaFuncao($classe, $acao, $dados)
                 if (!isset($visualizado))
                     return '{"status" : "sucesso"}';
                 else
-                    return '{"status":"erro"}';
+                    return '{"status" : "' . $visualizado . '"}';
+
             case "pegarTodas":
                 $notificacoes = getJsonNotificacoes($dados["logado"]);
 
@@ -84,7 +95,7 @@ function redirecionaFuncao($classe, $acao, $dados)
 
                 return  $notificacoes;
             default:
-                return '{"erro":"Erro n° 004, entre em contato com os desenvolvedores!"}';
+                return '{"erro":' . Messages::ERROR_MESSAGE_003 . '}';
         }
     } elseif ($classe == "contato"){
         switch ($acao) {
@@ -94,11 +105,11 @@ function redirecionaFuncao($classe, $acao, $dados)
                 if (is_array($contatos))
                     return json_encode($contatos);
                 else
-                    return '{"status":"erro"}';
+                    return '{"status":"' . $contatos . '"}';
             default:
-                return '{"erro":"Erro n° 004, entre em contato com os desenvolvedores!"}';
+                return '{"erro":' . Messages::ERROR_MESSAGE_003 . '}';
         }
     } else {
-        return '{"erro":"Erro n° 004, entre em contato com os desenvolvedores!"}';
+        return '{"erro":' . Messages::ERROR_MESSAGE_004 . '}';
     }
 }

@@ -8,13 +8,13 @@ require_once "../util/Funcoes.php";
  * Id do usuario que solicitou os contatos
  * </p>
  * @return Usuario[]|string <p>
- * Retorna um array de usuario ou uma  string informando o porque nao fo possivel retornar os contatos
+ * Retorna um array de usuario ou uma  string informando o porque nao foi possivel retornar os contatos
  * </p>
  */
 function getAllContatos($usuario){
     $conex = conex();
     if ($conex -> connect_errno) {
-        return "Failed to connect to MySQL: $conex->connect_error";
+        return Messages::ERROR_MESSAGE_005;
     }
 
     $sql = "CALL get_all_contatos(?)";
@@ -42,7 +42,7 @@ function getAllContatos($usuario){
         $retorno = 'nenhum contato encontrar encontrada';
 
     if (isset($stat->error_list[0]))
-        $retorno = "$stat->error";
+        $retorno = Messages::ERROR_MESSAGE_006;
 
     return $retorno;
 }

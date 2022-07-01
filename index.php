@@ -11,14 +11,14 @@ if ($metodo != "POST") {
 }
 
 if (!array_key_exists('classe', $_GET)) {
-    echo '{"erro":"Erro n° 001, entre em contato com os desenvolvedores!"}';
+    echo '{"erro":"' . Messages::ERROR_MESSAGE_001 . '"}';
     exit;
 }
 
 $path = explode('/', $_GET['classe']);
 
 if (count($path) == 0 || $path[0] == "") {
-    echo '{"erro":"Erro n° 002, entre em contato com os desenvolvedores!"}';
+    echo '{"erro":"' . Messages::ERROR_MESSAGE_002 . '"}';
     exit;
 }
 

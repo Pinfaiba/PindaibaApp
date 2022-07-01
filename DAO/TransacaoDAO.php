@@ -24,7 +24,7 @@ require_once "util/Funcoes.php";
 function realizarTransacao($logado, $alvo, $valor, $descricao = "nenhuma descrição"){
     $conex = conex();
     if ($conex -> connect_errno) {
-        return "Failed to connect to MySQL: $conex->connect_error";
+        return "erro de conexão com o banco";
     }
 
     $sql = "SELECT realizar_transacao(?, ?, ?, ?) AS realizado";
@@ -47,7 +47,7 @@ function realizarTransacao($logado, $alvo, $valor, $descricao = "nenhuma descri�
     if (isset($stat->error_list[0])){
         $stat->close();
         $conex->close();
-        return "$stat->error";
+        return "erro ao consultar o banco de dados";
     }
 
     return ((boolean) $realizou);
@@ -104,7 +104,7 @@ function confirmarTransacaoNotificacao($notificacao){
 function confirmarTransacao($transacao){
     $conex = conex();
     if ($conex -> connect_errno) {
-        return "Failed to connect to MySQL: $conex->connect_error";
+        return Messages::ERROR_MESSAGE_005;
     }
 
     $sql = "UPDATE transacoes SET confirmado = true WHERE id_transacao = ?";
@@ -121,7 +121,7 @@ function confirmarTransacao($transacao){
     $conex->close();
 
     if (isset($stat->error_list[0])){
-        return "$stat->error";
+        return Messages::ERROR_MESSAGE_006;
     }
 }
 
@@ -141,7 +141,7 @@ function confirmarTransacao($transacao){
 function getTransacoesAlvo($logado, $alvo){
     $conex = conex();
     if ($conex -> connect_errno) {
-        return "Failed to connect to MySQL: $conex->connect_error";
+        return Messages::ERROR_MESSAGE_005;
     }
 
     $sql = "call get_transacoes_alvo(?, ?)";
@@ -178,7 +178,7 @@ function getTransacoesAlvo($logado, $alvo){
         $retorno = "nenhuma transacao encontrada";
 
     if (isset($stat->error_list[0]))
-        $retorno = "$stat->error";
+        $retorno = Messages::ERROR_MESSAGE_006;
 
     return $retorno;
 }
@@ -199,7 +199,7 @@ function getTransacoesAlvo($logado, $alvo){
 function getUltimasTransacoes($usuario, $quant){
     $conex = conex();
     if ($conex -> connect_errno) {
-        return "Failed to connect to MySQL: $conex->connect_error";
+        return Messages::ERROR_MESSAGE_005;
     }
 
     $sql = "call get_ultimas_transacoes(?, ?)";
@@ -236,7 +236,7 @@ function getUltimasTransacoes($usuario, $quant){
         $retorno = "nenhuma transacao encontrada";
 
     if (isset($stat->error_list[0]))
-        $retorno = "$stat->error";
+        return Messages::ERROR_MESSAGE_006;
 
     return $retorno;
 }

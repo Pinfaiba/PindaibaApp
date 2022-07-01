@@ -2,10 +2,18 @@
 require_once "../modelos/Notificacao.php";
 require_once "../util/Funcoes.php";
 
+/**
+ * @param $notificacao <p>
+ * Id da notificação que será visualizada
+ * </p>
+ * @return string|void <p>
+ * Em caso de erro retorna uma string informando qual o erro caso contrario retorna void
+ * </p>
+ */
 function visualizarNotificacao($notificacao){
     $conex = conex();
     if ($conex -> connect_errno) {
-        return "Failed to connect to MySQL: $conex->connect_error";
+        return "erro ao conectar com o banco de dados";
     }
 
     $sql =
@@ -23,7 +31,7 @@ function visualizarNotificacao($notificacao){
     $conex->close();
 
     if (isset($stat->error_list[0])){
-        return "$stat->error";
+        return "erro ao comunicar com o banco de dados";
     }
 }
 
@@ -39,7 +47,7 @@ function visualizarNotificacao($notificacao){
 function getJsonNotificacoes($idUsuario){
     $conex = conex();
     if ($conex -> connect_errno) {
-        return "{\"erro\" : \"Failed to connect to MySQL: $conex->connect_error\"}";
+        return "{\"status\" : \"erro ao conectar com o banco de dados\"}";
     }
 
     $sql = "call get_all_notificacoes(?)";
@@ -54,7 +62,7 @@ function getJsonNotificacoes($idUsuario){
 
     $result = $stat->get_result();
 
-    $retorno = "{\"erro\" : \"nenhuma notificação encontrada\"}";
+    $retorno = "{\"status\" : \"nenhuma notificação encontrada\"}";
 
     $notificacoes = $result->fetch_all(MYSQLI_ASSOC);
 
@@ -62,7 +70,7 @@ function getJsonNotificacoes($idUsuario){
         $retorno = json_encode($notificacoes);
 
     if (isset($stat->error_list[0]))
-        $retorno = "{\"erro\" : \"$stat->error\"}";
+        $retorno = "{\"status\" : \"erro ao comunicar com o banco de dados\"}";
 
     $stat->close();
     $conex->close();
@@ -76,12 +84,13 @@ function getJsonNotificacoes($idUsuario){
  * Id do usuario que solicitou as notificacoes
  * </p>
  * @return string <p>
+ * Retorna um json com as notificacoes não visualizadas ou um json afirmando qual o tipo de erro
  * </p>
  */
 function getJsonNaoVisualizadas($idUsuario){
     $conex = conex();
     if ($conex -> connect_errno) {
-        return "{\"status\" : \"erro\"}";
+        return "{\"status\" : \"" . Messages::ERROR_MESSAGE_005 . "\"}";
     }
 
     $sql = "call get_notificacoes_nao_visualizadas(?)";
@@ -104,7 +113,7 @@ function getJsonNaoVisualizadas($idUsuario){
         $retorno = json_encode($notificacoes);
 
     if (isset($stat->error_list[0]))
-        $retorno = "{\"status\" : \"erro\"}";
+        $retorno = "{\"status\" : \"" . Messages::ERROR_MESSAGE_006 . "\"}";
 
     $stat->close();
     $conex->close();
