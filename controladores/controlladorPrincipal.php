@@ -20,7 +20,7 @@ function redirecionaFuncao($classe, $acao, $dados)
     if ($classe == "usuario") {
         switch ($acao) {
             case "cadastrar":
-                $usuario = cadastrar($dados["nome"], $dados["email"], $dados["senha"]);
+                $usuario = cadastrar($dados["nome"], $dados["email"], sha1($dados["senha"]));
 
                 if (is_string($usuario))
                     return '{"status" : "' . $usuario . '"}';
@@ -34,7 +34,7 @@ function redirecionaFuncao($classe, $acao, $dados)
 
                 return json_encode($usuario);
             default:
-                return '{"erro":' . Messages::ERROR_MESSAGE_003 . '}';
+                return '{"erro":"' . Messages::ERROR_MESSAGE_003 . '"}';
         }
     } elseif ($classe == "transacao") {
         switch ($acao) {
@@ -74,7 +74,7 @@ function redirecionaFuncao($classe, $acao, $dados)
                 else
                     return '{"status" : "' . $transacoes . '"}';
             default:
-                return '{"erro":' . Messages::ERROR_MESSAGE_003 . '}';
+                return '{"erro":"' . Messages::ERROR_MESSAGE_003 . '"}';
         }
     } elseif ($classe == "notificacao") {
         switch ($acao) {
@@ -95,7 +95,7 @@ function redirecionaFuncao($classe, $acao, $dados)
 
                 return  $notificacoes;
             default:
-                return '{"erro":' . Messages::ERROR_MESSAGE_003 . '}';
+                return '{"erro":"' . Messages::ERROR_MESSAGE_003 . '"}';
         }
     } elseif ($classe == "contato"){
         switch ($acao) {
@@ -107,9 +107,9 @@ function redirecionaFuncao($classe, $acao, $dados)
                 else
                     return '{"status":"' . $contatos . '"}';
             default:
-                return '{"erro":' . Messages::ERROR_MESSAGE_003 . '}';
+                return '{"erro":"' . Messages::ERROR_MESSAGE_003 . '"}';
         }
     } else {
-        return '{"erro":' . Messages::ERROR_MESSAGE_004 . '}';
+        return '{"erro":"' . Messages::ERROR_MESSAGE_004 . '"}';
     }
 }

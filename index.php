@@ -2,6 +2,7 @@
 require_once "controladores/controlladorPrincipal.php";
 require_once "DAO/UsuarioDAO.php";
 require_once "DAO/TransacaoDAO.php";
+require_once "util/Messages.php";
 
 $metodo = $_SERVER['REQUEST_METHOD'];
 

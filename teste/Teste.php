@@ -4,9 +4,9 @@
 //require_once "../DAO/NotificacaoDAO.php";
 //require_once "../DAO/TransacaoDAO.php";
 //require_once "../DAO/ContatoDAO.php";
-require_once "../controladores/controlladorPrincipal.php";
-require_once "../DAO/UsuarioDAO.php";
-require_once "../DAO/TransacaoDAO.php";
+require_once "controladores/controlladorPrincipal.php";
+require_once "DAO/UsuarioDAO.php";
+require_once "DAO/TransacaoDAO.php";
 
 header('Content-Type: application/json;charset=utf-8');
 //$resultado = json_encode("fudeu");
